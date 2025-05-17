@@ -1,59 +1,111 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import "./auth.css";
 
 import CardLeft from "../components/CardLeft";
-import Header from "../components/Header";
+import Header from "../../../components/Logo";
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUser } from "../authSlice";
 
 const Register = () => {
+ const [newUser, setNewUser] = useState({
+  fullName:"hr_user1",
+  email:"hr_user1@gmail.com",
+  password:"hr_password1",
+  confirm_password:"hr_password1"
+ })
+
+ const { loading , error , isAuthenticated } = useSelector((state) => state.auth);
+ 
+ const [showPassword, setShowPassword] = useState(false);
+ const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
+ const dispatch = useDispatch();
+
+ const navigate = useNavigate()
+
+ const inputChangeHandler = (e) => {
+  setNewUser((prev) => ({
+    ...prev,
+    [e.target.name]:e.target.value
+  }))
+ }
+
+ const handleFormSubmt = (e) => {
+  e.preventDefault();
+  dispatch(registerUser(newUser))
+ }
+
+
+ useEffect(() => {
+    if(isAuthenticated){
+        navigate('/candidates')
+    }
+ },[isAuthenticated, navigate])
+
+ const togglePasswordVisibility = () => {
+  setShowPassword(!showPassword);
+ }
+
+ const toggleConfirmPasswordVisibility = () => {
+  setShowConfirmPassword(!showConfirmPassword);
+ }
+
   return (
-    <section class="container">
+    <section className="container">
       <Header />
-      <div class="card-container">
+      <div className="card-container">
         <CardLeft />
 
-        <div class="card-right">
-          <h1 class="form-title">Welcome to Dashboard</h1>
+        <div className="card-right">
+          <h1 className="form-title">Welcome to Dashboard</h1>
 
-          <form>
-            <div class="form-group">
-              <label class="form-label" htmlFor="fullName">
+          <form onSubmit={handleFormSubmt}>
+            <div className="form-group">
+              <label className="form-label" htmlFor="fullName">
                 Full name<span>*</span>
               </label>
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 placeholder="Full name"
                 name="fullName"
+                value={newUser.fullName}
+                onChange={inputChangeHandler}
                 required
               />
             </div>
 
-            <div class="form-group">
-              <label class="form-label" htmlFor="email">
+            <div className="form-group">
+              <label className="form-label" htmlFor="email">
                 Email Address<span>*</span>
               </label>
               <input
                 type="email"
-                class="form-control"
+                className="form-control"
                 name="email"
+                value={newUser.email}
+                onChange={inputChangeHandler}
                 placeholder="Email Address"
                 required
               />
             </div>
 
-            <div class="form-group">
-              <label class="form-label" htmlFor="password">
+            <div className="form-group">
+              <label className="form-label" htmlFor="password">
                 Password<span>*</span>
               </label>
-              <div class="password-field">
+              <div className="password-field">
                 <input
-                  type="password"
-                  class="form-control"
+                  type={showPassword ? "text" : "password"}
+                  className="form-control"
                   placeholder="Password"
+                  value={newUser.password}
+                  onChange={inputChangeHandler}
                   name="password"
                   required
                 />
-                <div class="password-toggle">
+                <button type="button" className="password-toggle" onClick={togglePasswordVisibility}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     color="#5a0099"
@@ -62,31 +114,33 @@ const Register = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
                     <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                     <circle cx="12" cy="12" r="3"></circle>
                   </svg>
-                </div>
+                </button>
               </div>
             </div>
 
-            <div class="form-group">
-              <label class="form-label" htmlFor="confirm_password">
+            <div className="form-group">
+              <label className="form-label" htmlFor="confirm_password">
                 Confirm Password<span>*</span>
               </label>
-              <div class="password-field">
+              <div className="password-field">
                 <input
-                  type="password"
-                  class="form-control"
+                  type={showConfirmPassword ? "text" : "password"}
+                  className="form-control"
                   name="confirm_password"
+                  value={newUser.confirm_password}
+                  onChange={inputChangeHandler}
                   placeholder="Confirm Password"
                   required
                 />
-                <div class="password-toggle">
-                  <svg
+                <button type="button" className="password-toggle" onClick={toggleConfirmPasswordVisibility}>
+             <svg
                     xmlns="http://www.w3.org/2000/svg"
                     color="#5a0099"
                     width="24"
@@ -94,22 +148,23 @@ const Register = () => {
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
-                    stroke-width="2"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
                   >
-                    <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
-                    <line x1="1" y1="1" x2="23" y2="23"></line>
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
                   </svg>
-                </div>
+                </button>
               </div>
             </div>
-
-            <button type="submit" class="btn-register">
+            {error && <p className="error">{error}</p>}
+            {loading && <p>Loading...</p>}
+            <button type="submit" className="btn-register">
               Register
             </button>
 
-            <div class="login-link">
+            <div className="login-link">
               Already have an account? <Link to={"/login"}>Login</Link>
             </div>
           </form>

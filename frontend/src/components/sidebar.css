@@ -1,0 +1,115 @@
+.sidebar {
+  width: 280px;
+  height: 100vh;
+  background-color: white;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid #e0e0e0;
+}
+
+.search-container {
+  margin-bottom: 30px;
+}
+
+.search-box {
+  width: 100%;
+  padding: 12px 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 50px;
+  font-size: 16px;
+  color: #757575;
+  background-color: transparent;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23757575' viewBox='0 0 16 16'%3E%3Cpath d='M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z'%3E%3C/path%3E%3C/svg%3E");
+  background-position: 12px center;
+  background-repeat: no-repeat;
+  padding-left: 40px;
+}
+
+.search-box::placeholder {
+  color: #757575;
+}
+
+.section-title {
+  font-size: 14px;
+  font-weight: 500;
+  color: #9e9e9e;
+  margin-bottom: 15px;
+  margin-top: 5px;
+}
+
+/* Navigation Link Styling */
+.nav-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  margin:15px 0;
+}
+
+/* Menu Item Styling */
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 12px 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.menu-item.active {
+  background-color: #8a2be2; /* Violet color for active state */
+  color: white;
+}
+
+.nav-link:hover .menu-item:not(.active) {
+  background-color: #f0f0f0;
+}
+
+.menu-icon {
+  width: 20px;
+  height: 20px;
+  margin-right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Icon classes */
+.icon-candidates::before {
+  content: "👥";
+}
+
+.icon-employees::before {
+  content: "👤";
+}
+
+.icon-attendance::before {
+  content: "📊";
+}
+
+.icon-leaves::before {
+  content: "✨";
+}
+
+.icon-logout::before {
+  content: "↪";
+}
+
+.menu-item span {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+
+
+/* Logout button styling */
+.logout-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 0;
+  font-family: inherit;
+  color: inherit;
+  width: 100%;
+}
