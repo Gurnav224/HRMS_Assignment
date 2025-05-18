@@ -5,6 +5,7 @@ const databaseConnection = require('./db/database');
 const authRouter = require('./routes/auth.routes');
 const userRouter = require('./routes/user.routes');
 const cookieParser = require('cookie-parser');
+const candidateRouter = require('./routes/candidate.routes')
 require('dotenv').config();
 
 
@@ -14,6 +15,8 @@ app.use(cors({
   origin:'http://localhost:5173',
   credentials:true
 }))
+
+
 app.use(express.json())
 app.use(express.urlencoded({extended:true}))
 app.use(morgan('dev'));
@@ -24,7 +27,8 @@ app.get('/', (req,res) => {
 })
 
 app.use('/auth',authRouter);
-app.use('/hr',userRouter)
+app.use('/hr',userRouter);
+app.use('/candidate', candidateRouter)
 
 const PORT = process.env.PORT || 3000;
 
