@@ -1,24 +1,24 @@
-
-
 main {
   flex: 1;
   margin: 1% 1%;
+
 }
 
 .header-row {
-display: flex;
+  display: flex;
+
 }
 
 
 .top-header {
-background-color: #fff;
-display: flex;
-height: 8vh;
-border-radius: 10px;
-margin: 1% 0;
-align-items: center;
-justify-content: space-between;
-padding: 0 1%;
+  background-color: #fff;
+  display: flex;
+  height: 8vh;
+  border-radius: 10px;
+  margin: 1% auto;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 1%;
 }
 
 .filter-bar {
@@ -64,7 +64,8 @@ padding: 0 1%;
 
 .add-button {
   padding: 10px 20px;
-  background-color: #5a0796; /* Purple */
+  background-color: #5a0796;
+  /* Purple */
   color: white;
   border: none;
   border-radius: 999px;
@@ -79,9 +80,9 @@ padding: 0 1%;
 
 
 .flex {
-display: flex;
-gap: 16px;
-flex-wrap: wrap;
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
 }
 
 /* Candidates table styles */
@@ -99,13 +100,15 @@ flex-wrap: wrap;
 }
 
 .candidates-table thead {
-  background-color: #5a0099; /* Violet color */
+  background-color: #5a0099;
+  /* Violet color */
 }
 
 .candidates-table th {
   padding: 16px;
   font-weight: 600;
-  color: white; /* Changed to white for better contrast */
+  color: white;
+  /* Changed to white for better contrast */
 }
 
 .candidates-table td {
@@ -117,19 +120,23 @@ flex-wrap: wrap;
 .candidates-table tr:last-child td {
   border-bottom: none;
 }
+
 .status-dropdown-container {
- position: relative;
+  position: relative;
 }
+
 .status-dropdown {
- position: absolute;
- background-color: #f3f3f3;
- padding: 5px 10px;
- z-index: 22;
- border-radius: 10px;
+  position: absolute;
+  background-color: #f3f3f3;
+  padding: 5px 10px;
+  z-index: 22;
+  border-radius: 10px;
 }
+
 .status-option {
-margin: 10px 0;
+  margin: 10px 0;
 }
+
 .status-badge {
   display: inline-flex;
   align-items: center;
@@ -261,3 +268,47 @@ margin: 10px 0;
   background-color: #d0d0d0;
 }
 
+.action-dropdown-container {
+
+  position: relative;
+}
+
+.action-dropdown {
+  position: absolute;
+  background-color: #f3f3f3;
+  left: -230%;
+  padding: 5px 10px;
+  width: 200px;
+  z-index: 22;
+  border-radius: 10px;
+}
+
+.action-option {
+  margin: 10px 0;
+  cursor: pointer;
+  background-color: #e2d6d6;
+  padding: 5px 13px;
+  font-size: 14px;
+}
+
+.action-option:hover {
+  background-color: #d0d0d0;
+}
+
+.status-dropdown-container select {
+  border: 1px solid violet;
+  background: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  color: #333;
+  padding: 5px 10px;
+}
+
+.status-dropdown-container select.selected {
+  background-color: #e6ffe6;
+}
+
+.status-dropdown-container select.rejected {
+  background-color: #ffe6e6;
+}

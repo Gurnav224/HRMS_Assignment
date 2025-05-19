@@ -1,49 +1,22 @@
 import Sidebar from "../../components/Sidebar";
 import UserProfile from "../../components/userProfile/UserProfile";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "../../components/logout_modal/Modal";
-
+import { useDispatch, useSelector } from "react-redux";
+import { getCandidatesAsync, createNewCandidateAsync, getCandidatesResumeAsync, deletetCandidateAsync, updateCandidateStatusAsync } from "./candidate.slice";
 
 const Candidates = () => {
-  const [candidates, setCandidates] = useState([
-    {
-      id: "01",
-      name: "Jacob William",
-      email: "jacob.william@example.com",
-      phone: "(252) 555-0111",
-      position: "Senior Developer",
-      status: "New",
-      experience: "1+"
-    },
-    {
-      id: "02",
-      name: "Guy Hawkins",
-      email: "kenzi.lawson@example.com",
-      phone: "(907) 555-0101",
-      position: "Human Resource Manager",
-      status: "Selected",
-      experience: "3+"
-    },
-    {
-      id: "03",
-      name: "Arlene McCoy",
-      email: "arlene.mccoy@example.com",
-      phone: "(302) 555-0107",
-      position: "Full Time Designer",
-      status: "Selected",
-      experience: "2+"
-    },
-    {
-      id: "04",
-      name: "Leslie Alexander",
-      email: "willie.jennings@example.com",
-      phone: "(207) 555-0119",
-      position: "Full Time Developer",
-      status: "Rejected",
-      experience: "0"
-    }
-  ]);
-  
+
+  const { candidates, loading, error } = useSelector((state) => state.candidate);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getCandidatesAsync())
+  }, [])
+
+
+
+
   const [openStatusDropdown, setOpenStatusDropdown] = useState(null);
   const [openActionDropdown, setOpenActionDropdown] = useState(null);
 
@@ -57,35 +30,31 @@ const Candidates = () => {
     resume: null,
     declaration: false
   });
-  
+
   const handleInputChange = (e) => {
     const { name, value, type, checked, files } = e.target;
-    
+
     if (type === 'file') {
-      setNewCandidate({...newCandidate, [name]: files[0]});
+      setNewCandidate({ ...newCandidate, [name]: files[0] });
     } else if (type === 'checkbox') {
-      setNewCandidate({...newCandidate, [name]: checked});
+      setNewCandidate({ ...newCandidate, [name]: checked });
     } else {
-      setNewCandidate({...newCandidate, [name]: value});
+      setNewCandidate({ ...newCandidate, [name]: value });
     }
   };
-  
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Add logic to save the new candidate
-    console.log("New candidate:", newCandidate);
+    dispatch(createNewCandidateAsync(newCandidate));
     setCandidateModal(false);
   };
-  
+
   const statusOptions = ["New", "Scheduled", "Ongoing", "Selected", "Rejected"];
-  
+
   const handleStatusChange = (candidateId, newStatus) => {
-    setCandidates(candidates.map(candidate => 
-      candidate.id === candidateId ? {...candidate, status: newStatus} : candidate
-    ));
-    setOpenStatusDropdown(null);
+    dispatch(updateCandidateStatusAsync({ candidateId, newStatus }));
   };
-  
+
   const toggleStatusDropdown = (candidateId) => {
     if (openStatusDropdown === candidateId) {
       setOpenStatusDropdown(null);
@@ -94,7 +63,7 @@ const Candidates = () => {
       setOpenActionDropdown(null);
     }
   };
-  
+
   const toggleActionDropdown = (candidateId) => {
     if (openActionDropdown === candidateId) {
       setOpenActionDropdown(null);
@@ -105,10 +74,22 @@ const Candidates = () => {
   };
 
 
+
+  const handleDownloadResume = async (candidateId) => {
+    dispatch(getCandidatesResumeAsync(candidateId))
+  };
+
+
+  const handleDeleteCandidate = (candidateId) => {
+    dispatch(deletetCandidateAsync(candidateId));
+    setOpenActionDropdown(null); // Close the dropdown after deletion
+  }
+
+
   return (
     <div className="header-row">
       <Sidebar />
-     
+
       <main>
         <div className="top-header">
           <h3>Candidates</h3>
@@ -165,7 +146,7 @@ const Candidates = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <label htmlFor="email" className="form-label">
                     Email Address<span className="required">*</span>
@@ -181,7 +162,7 @@ const Candidates = () => {
                   />
                 </div>
               </div>
-              
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="phone" className="form-label">
@@ -197,7 +178,7 @@ const Candidates = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <label htmlFor="position" className="form-label">
                     Position<span className="required">*</span>
@@ -213,7 +194,7 @@ const Candidates = () => {
                   />
                 </div>
               </div>
-              
+
               <div className="form-row">
                 <div className="form-group">
                   <label htmlFor="experience" className="form-label">
@@ -229,7 +210,7 @@ const Candidates = () => {
                     required
                   />
                 </div>
-                
+
                 <div className="form-group">
                   <label htmlFor="resume" className="form-label">
                     Resume<span className="required">*</span>
@@ -247,7 +228,7 @@ const Candidates = () => {
                   </div>
                 </div>
               </div>
-              
+
               <div className="declaration">
                 <input
                   type="checkbox"
@@ -261,7 +242,7 @@ const Candidates = () => {
                   I hereby declare that the above information is true to the best of my knowledge and belief
                 </label>
               </div>
-              
+
               <div className="form-actions">
                 <button type="submit" className="save-button">Save</button>
               </div>
@@ -284,53 +265,42 @@ const Candidates = () => {
               </tr>
             </thead>
             <tbody>
-              {candidates.map((candidate) => (
-                <tr key={candidate.id}>
-                  <td>{candidate.id}</td>
+              {loading && <tr><td colSpan="8">Loading...</td></tr>}
+              {error && <tr><td colSpan="8">{error}</td></tr>}
+              {candidates && candidates.length === 0 && <tr><td colSpan="8">No candidates found</td></tr>}
+              {candidates && candidates?.map((candidate, index) => (
+                <tr key={candidate._id}>
+                  <td>{index < 9 ? `0${index + 1}` : index + 1}</td>
                   <td>{candidate.name}</td>
                   <td>{candidate.email}</td>
                   <td>{candidate.phone}</td>
                   <td>{candidate.position}</td>
                   <td>
                     <div className="status-dropdown-container">
-                      <div 
-                        className={`status-badge ${candidate.status.toLowerCase()}`}
-                        onClick={() => toggleStatusDropdown(candidate.id)}
-                      >
-                        {candidate.status}
-                        <span className="dropdown-arrow">▼</span>
-                      </div>
-                      
-                      {openStatusDropdown === candidate.id && (
-                        <div className="status-dropdown">
-                          {statusOptions.map(status => (
-                            <div 
-                              key={status} 
-                              className="status-option"
-                              onClick={() => handleStatusChange(candidate.id, status)}
-                            >
-                              {status}
-                            </div>
-                          ))}
-                        </div>
-                      )}
-
+                      <select defaultValue={candidate.status} className={`${candidate.status === 'Selected' && 'selected' || candidate.status === 'Rejected' && 'rejected' }`}
+                        onChange={(e) => handleStatusChange(candidate._id, e.target.value)} name="status" id="status">
+                        <option value="New" >New</option>
+                        <option value="Scheduled">Scheduled</option>
+                        <option value="Ongoing">Ongoing</option>
+                        <option value="Selected" style={candidate.status === 'Selected' ? { color: 'green' } : null}>Selected</option>
+                        <option value="Rejected">Rejected</option>
+                      </select>
                     </div>
                   </td>
                   <td>{candidate.experience}</td>
                   <td>
                     <div className="action-dropdown-container">
-                      <button 
+                      <button
                         className="action-button"
-                        onClick={() => toggleActionDropdown(candidate.id)}
+                        onClick={() => toggleActionDropdown(candidate._id)}
                       >
                         ⋮
                       </button>
-                      
-                      {openActionDropdown === candidate.id && (
+
+                      {openActionDropdown === candidate._id && (
                         <div className="action-dropdown">
-                          <div className="action-option">Download Resume</div>
-                          <div className="action-option">Delete Candidate</div>
+                          <button onClick={() => handleDownloadResume(candidate._id)} className="action-option">Download Resume</button>
+                          <button onClick={() => handleDeleteCandidate(candidate._id)} className="action-option">Delete Candidate</button>
                         </div>
                       )}
                     </div>
