@@ -20,7 +20,8 @@ const mongoose = require('mongoose');
     },
     status:{
         type:String,
-        enum:['New','Scheduled' ,'Ongoing','Selected','Rejected']
+        enum:['New','Scheduled' ,'Ongoing','Selected','Rejected'],
+        default:'New'
     },
     experience:{
         type:String,
@@ -36,4 +37,3 @@ const mongoose = require('mongoose');
  const candidate = mongoose.model('Candidate',CandidateSchema);
 
  module.exports = candidate;
- 

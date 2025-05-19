@@ -34,8 +34,8 @@ exports.register = async (req, res) => {
         res.cookie('token', token, {
             maxAge: 3600000,
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict'
+            secure: false,
+            sameSite: 'lax',
         }).status(201).json({ message: 'registration successful',user:hrUser , token });
     } catch (error) {
         console.error("registration error:", error);
@@ -72,8 +72,8 @@ exports.login = async (req,res) => {
         res.cookie('token',token,{
             maxAge: 3600000,
             httpOnly: true,
-            secure: process.env.NODE_ENV === 'production',
-            sameSite: 'strict'
+            secure: false,
+            sameSite: 'lax'
         }).status(200).json({message:'login successfully',user:hrUser,token});
     } catch (error) {
         console.error('failed to login', error);

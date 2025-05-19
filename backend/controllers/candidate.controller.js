@@ -1,5 +1,6 @@
+const candidate = require('../models/candidates.model');
 const Candidate = require('../models/candidates.model');
-
+const axios = require('axios')
 
 exports.addCandidate = async (req,res) => {
   const {name,email,phone,position,status,experience} = req.body;
@@ -24,9 +25,9 @@ exports.addCandidate = async (req,res) => {
       resume: req.file.path
     });
 
-    const savedCandidate = await newCandidate.save();
+    const candidate = await newCandidate.save();
 
-    res.status(201).json({message:'Candidate added successfully',candidate:savedCandidate});
+    res.status(201).json(candidate);
 
   } catch (error) {
     console.error('failed create new candidate error', error.message);
@@ -38,7 +39,7 @@ exports.addCandidate = async (req,res) => {
 exports.getCandidates = async (req,res) => {
   try {
     const candidates = await Candidate.find();
-    res.status(200).json({message:'get candidates successfully',candidates});
+    res.status(200).json(candidates);
   } catch (error) {
     console.error('failed to get candidates', error.message);
     res.status(500).json({error:'failed to get candidates'})
@@ -48,16 +49,54 @@ exports.getCandidates = async (req,res) => {
 
 
 
-exports.downloadCandidateResume = async (req,res) => {
+exports.downloadCandidateResume = async (req, res) => {
   const { id } = req.params;
   try {
-    const candidate = await  Candidate.findById(id);
-    if(!candidate) {
-      return res.status(404).json({message:'Candidate not found'});
+    const candidate = await Candidate.findById(id);
+    if (!candidate) {
+      return res.status(404).json({message: 'Candidate not found'});
     }
-    res.redirect(candidate.resume);
+    
+    if (!candidate.resume) {
+      return res.status(404).json({message: 'Resume URL not found'});
+    }
+    
+    // Simply return the resume URL to the client
+    res.status(200).json({ resumeUrl: candidate.resume });
+    
   } catch (error) {
-    console.error('failed to download resume', error.message);
-    res.status(500).json({error:'failed to download resume'})
+    console.error('Failed to get resume URL', error);
+    res.status(500).json({error: 'Failed to get resume URL'});
   }
 } 
+
+exports.deleteCandidate = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const candidate = await Candidate.findByIdAndDelete(id);
+    if (!candidate) {
+      return res.status(404).json({message: 'Candidate not found'});
+    }
+    res.status(200).json({message: 'Candidate deleted successfully'});
+  } catch (error) {
+    console.error('Failed to delete candidate', error);
+    res.status(500).json({error: 'Failed to delete candidate'});
+  }
+}
+
+
+
+exports.updateCandidateStatus = async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+  try {
+    const candidate = await Candidate.findByIdAndUpdate(id, { status }, { new: true });
+    if (!candidate) {
+      return res.status(404).json({message: 'Candidate not found'});
+    }
+    res.status(200).json(candidate);
+  } catch (error) {
+    console.error('Failed to update candidate status', error);
+    res.status(500).json({error: 'Failed to update candidate status'});
+  }
+}
