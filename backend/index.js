@@ -12,7 +12,7 @@ require('dotenv').config();
 const app = express();
 
 app.use(cors({
-  origin:'http://localhost:5173',
+  origin:'https://hrms-assignment-u5od.vercel.app',
   credentials:true
 }))
 
